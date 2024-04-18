@@ -10,7 +10,7 @@ ADDEND = np.int64(11);
 MASK = np.int64(math.pow(2, 48)) - 1
 
 @njit(fastmath=True)
-def process_cood(seed):
+def process_coord(seed):
 	for _ in range(5000):
 		for x in range(-23440, 23441):
 			externalSeed = np.int64(seed ^ MULTIPLIER)
@@ -37,11 +37,11 @@ def crack_item_drop_coordinate(drop_x, drop_y, drop_z):
 	cube_center_y = (measurement2 << 24) + np.int64(8388597)
 	cube_center_z = (measurement3 << 24) - np.int64(277355554490)
 	
-	basis_coeff0 = 9.555378710501827e-11 * cube_center_x - 2.5481838861196593e-10 * cube_center_y + 1.184083942007419e-10 * cube_center_z
-	basis_coeff1 = -1.2602185961441137e-10 * cube_center_x + 6.980727107475104e-11 * cube_center_y + 1.5362999761237006e-10 * cube_center_z
-	basis_coeff2 = -1.5485213111787743e-10 * cube_center_x - 1.2997958265259513e-10 * cube_center_y - 5.6285642813236336e-11 * cube_center_z
+	basic_coeff0 = 9.555378710501827e-11 * cube_center_x - 2.5481838861196593e-10 * cube_center_y + 1.184083942007419e-10 * cube_center_z
+	basic_coeff1 = -1.2602185961441137e-10 * cube_center_x + 6.980727107475104e-11 * cube_center_y + 1.5362999761237006e-10 * cube_center_z
+	basic_coeff2 = -1.5485213111787743e-10 * cube_center_x - 1.2997958265259513e-10 * cube_center_y - 5.6285642813236336e-11 * cube_center_z
 
-	seed = round(basis_coeff0) * np.int64(1270789291) + round(basis_coeff1) * np.int64(-2355713969) + round(basis_coeff2) * np.int64(-3756485696) & MASK
+	seed = round(basic_coeff0) * np.int64(1270789291) + round(basic_coeff1) * np.int64(-2355713969) + round(basic_coeff2) * np.int64(-3756485696) & MASK
 	next_seed = seed * MULTIPLIER + ADDEND & MASK
 	next_next_seed = next_seed * MULTIPLIER + ADDEND & MASK
 
@@ -50,7 +50,7 @@ def crack_item_drop_coordinate(drop_x, drop_y, drop_z):
 		return
 
 	orig_seed = seed
-	coord_x, coord_z = process_cood(seed)
+	coord_x, coord_z = process_coord(seed)
 	if(coord_x != None and coord_z != None):
 		print(f"Item drop appeared at {drop_x} {drop_y} {drop_z}")
 		print(f"RNG measurements are therefore {measurement1} {measurement2} {measurement3}")
